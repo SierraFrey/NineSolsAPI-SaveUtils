@@ -74,6 +74,8 @@ public class NineSolsAPICore : BaseUnityPlugin {
             harmony = new Harmony($"harmony-auto-{(object)Guid.NewGuid()}");
             harmony.PatchAll(typeof(Patches.Patches));
             harmony.PatchAll(typeof(Patches.SteamAPI));
+            harmony.PatchAll(typeof(Patches.Transpilers)); harmony.PatchAll(typeof(Patches.Transpilers.ReadMetaInSave_TargetMethod));
+            
             if (GameVersions.IsVersion(GameVersions.SpeedrunPatch))
                 harmony.PatchAll(typeof(Patches.PatchesSpeedrunpatch));
         } catch (Exception e) {
