@@ -3,6 +3,8 @@ using HarmonyLib;
 using NineSolsAPI.Preload;
 using UnityEngine.Device;
 using UnityEngine.SceneManagement;
+using NineSolsAPI.Menu;
+using NineSolsAPI.Utils;
 
 namespace NineSolsAPI.Patches;
 
@@ -20,6 +22,7 @@ public class Patches {
             return;
         }
 
+        SaveUtils.Start();
         RuntimeInitHandler.LoadCore();
         SceneManager.LoadScene(__instance.NextScene);
     }
@@ -28,4 +31,11 @@ public class Patches {
     [HarmonyPatch(typeof(GameLevel), nameof(GameLevel.Awake))]
     [HarmonyPrefix]
     private static bool GameLevelAwake() => !Preloader.IsPreloading;
+
+    [HarmonyPatch(typeof(SaveSlotUIButton), nameof(SaveSlotUIButton.Submit))]
+    [HarmonyPrefix]
+    private static bool Submit(SaveSlotUIButton __instance)
+    {
+        return TitleScreenModList.CheckModDesyncsBeforeLoadSave(__instance);
+    }
 }
