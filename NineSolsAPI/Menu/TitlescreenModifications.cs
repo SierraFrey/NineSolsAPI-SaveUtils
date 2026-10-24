@@ -15,7 +15,7 @@ internal class TitlescreenModifications {
     private UIControlGroup? group;
     private UIControlButton? button;
 
-    private const bool Enable = false;
+    private const bool Enable = true;
 
     public void Load() {
         MaybeExtendMainMenu(SceneManager.GetActiveScene());
@@ -33,9 +33,12 @@ internal class TitlescreenModifications {
         if (scene.name != "TitleScreenMenu") return;
         if (button) return;
 
+        TitleScreenModList.Setup();
+        /*
         group = CreateUiControlGroup();
         button = CreateOptionsButton();
         button.clickToShowGroup = group;
+        */
     }
 
 
