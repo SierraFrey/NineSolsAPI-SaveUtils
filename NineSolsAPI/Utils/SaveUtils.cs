@@ -89,25 +89,33 @@ public static class SaveUtils
     }
     private static GameFlagBase CreateNewFlagBase(BaseUnityPlugin owner, string name, GameFlagBase flag)
     {
-        if (active)
-        {
-            Log.Error("Flags must be created before runtime.");
-            throw new Exception();
-        }
-
         // As far as I know, there isn't a limit to how long a name/id can be.
         string GUID = owner.Info.Metadata.GUID;
-        flag.name = name;
+        
         flag.SetSaveID(GUID + "." + name + ".");
+
+        if (!allCustomFlags.ContainsKey(GUID))
+        {
+            allCustomFlags.Add(GUID, new Dictionary<string, GameFlagBase>());
+        }
+        else if (allCustomFlags[GUID].ContainsKey(flag.FinalSaveID))
+        {
+            // Mainly for plugins that are loaded with ScriptEngine. Prevents errors when reloading ingame.
+            return allCustomFlags[GUID][flag.FinalSaveID];
+        }
+
+        if (active)
+        {
+            Log.Error("New flags must be created before a save is loaded/created.");
+            throw new Exception();
+        }
 
         if (!modDict.ContainsKey(GUID))
         {
             modDict[GUID] = new ModData(owner);
         }
-        if (!allCustomFlags.ContainsKey(GUID))
-        {
-            allCustomFlags.Add(GUID, new Dictionary<string, GameFlagBase>());
-        }
+
+        flag.name = name;
 
         try
         {
@@ -117,7 +125,7 @@ public static class SaveUtils
         {
             Log.Error($"Flag creation failed: {e}");
         }
-
+        
         modDict[GUID].flagCount++;
         return flag;
     }
