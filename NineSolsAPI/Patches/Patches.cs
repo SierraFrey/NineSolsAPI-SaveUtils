@@ -21,8 +21,7 @@ public class Patches {
         if (Application.buildGUID == GameVersions.SpeedrunPatch) {
             return;
         }
-
-        SaveUtils.Start();
+        
         RuntimeInitHandler.LoadCore();
         SceneManager.LoadScene(__instance.NextScene);
     }
@@ -38,4 +37,12 @@ public class Patches {
     {
         return TitleScreenModList.CheckModDesyncsBeforeLoadSave(__instance);
     }
+    
+    [HarmonyPatch(typeof(StartMenuLogic), nameof(StartMenuLogic.CreateOrLoadSaveSlotAndPlay))]
+    [HarmonyPrefix]
+    private static void CreateOrLoadSaveSlotAndPlay()
+    {
+        SaveUtils.Start();
+    }
+    
 }
