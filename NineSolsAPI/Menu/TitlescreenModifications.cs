@@ -32,7 +32,7 @@ internal class TitlescreenModifications {
 
         if (scene.name != "TitleScreenMenu") return;
         if (button) return;
-
+        
         TitleScreenModList.Setup();
         /*
         group = CreateUiControlGroup();
@@ -137,7 +137,7 @@ internal class TitleScreenModList
 
     private static Dictionary<string, GameObject>[] modButtons = new Dictionary<string, GameObject>[5];
 
-    private static GameObject ModList_ScrollRect = null!;
+    private static GameObject modList_GameObject = null!;
     private static GameObject buttonClone = null!;
 
     private static string modList_GameObject_Label_Text_String = "Mod List";
