@@ -245,12 +245,31 @@ internal class TitleScreenModList
             }
         }
 
+        // Mod list window
+        GameObject ScrollView = GameObject.Find("/MenuLogic").transform.Find("Scroll View").gameObject;
+
+        modList_GameObject = ObjectUtils.InstantiateAutoReference(ScrollView, GameObject.Find("/MenuLogic/MainMenuLogic/Providers/StartGame SaveSlotPanel").transform, false);
+        modList_GameObject.SetActive(true);
+        modList_GameObject.name = "modList_GameObject";
+
+        var modList_GameObject_LayoutElement = modList_GameObject.AddComponent<LayoutElement>();
+        modList_GameObject_LayoutElement.ignoreLayout = true;
+        modList_GameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(140, -137);
+        modList_GameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(440, 610);
+
         // Mod list label
-        GameObject TitleText = GameObject.Find("/MenuLogic").transform.Find("TitleText").gameObject;
-        var modListLabel = ObjectUtils.InstantiateAutoReference(TitleText, TitleText.transform.parent, false);
-        modListLabel.name = "modListLabel";
-        modListLabel.GetComponent<RectTransform>().anchoredPosition = new Vector2(700, -200);
-        modListLabel.GetComponent<Text>().text = "Mod List";
+        var modList_GameObject_Label = new GameObject("Mod List");
+        modList_GameObject_Label.transform.SetParent(modList_GameObject.transform);
+
+        var modList_GameObject_Label_Text = modList_GameObject_Label.AddComponent<TextMeshProUGUI>();
+        modList_GameObject_Label_Text.text = modList_GameObject_Label_Text_String;
+        modList_GameObject_Label_Text.font = GameObject.Find("/MenuLogic/MainMenuLogic/Providers/StartGame SaveSlotPanel/Title Text").GetComponent<TextMeshProUGUI>().font;
+        modList_GameObject_Label_Text.alignment = TextAlignmentOptions.Center;
+        modList_GameObject_Label_Text.fontSize = 32;
+        
+        var modList_GameObject_Label_RectTransform = modList_GameObject_Label.GetComponent<RectTransform>();
+        modList_GameObject_Label_RectTransform.localScale = new Vector3(1, 1, 1);
+        modList_GameObject_Label_RectTransform.anchoredPosition = new Vector2(0, 340);
 
         // Adding listeners to save slot buttons to update modlist when selected
         for (int i = 0; i < 4; i++)
@@ -260,24 +279,10 @@ internal class TitleScreenModList
             slot.GetComponent<SaveSlotUIButton>().OnSelectedEvent.AddListener(DisplayModListForSelectedFile);
         }
         
-        // Mod list window
-        GameObject ScrollView = GameObject.Find("/MenuLogic").transform.Find("Scroll View").gameObject;
-        ModList_ScrollRect = ObjectUtils.InstantiateAutoReference(ScrollView, ScrollView.transform.parent, false);
-        ModList_ScrollRect.SetActive(true);
-        ModList_ScrollRect.name = "Modlist";
-        ModList_ScrollRect.GetComponent<RectTransform>().anchoredPosition = new Vector2(140, -237);
-        ModList_ScrollRect.GetComponent<RectTransform>().sizeDelta = new Vector2(440, 610);
-        
-
-        // Adding listeners to start game and back button to toggle visibility of mod list
-        GameObject.Find("MenuLogic/MainMenuLogic/Providers/MenuUIPanel/Button Layout/MainMenuButton_Slot").GetComponent<UIControlButton>().onSubmit.AddListener(() => ModList_ScrollRect.SetActive(true));
-        GameObject.Find("/MenuLogic/MainMenuLogic/Providers/StartGame SaveSlotPanel/SavePanel_BackButton").GetComponent<UIControlButton>().onSubmit.AddListener(() => ModList_ScrollRect.SetActive(false));
-        
-        // Cleanup of mod list elements and preparation of DisplayModListForSelectedFile()
-        buttonClone = GameObject.Find("/MenuLogic/Modlist/Viewport/Content/ButtonCandidate1");
+        // Cleanup of modList_GameObject elements and preparation of DisplayModListForSelectedFile()
+        buttonClone = modList_GameObject.transform.Find("Viewport/Content/ButtonCandidate1").gameObject;
         buttonClone.name = "buttonClone";
         buttonClone.SetActive(false);
-        GameObject.Destroy(GameObject.Find("/MenuLogic/Modlist/Viewport/Content/ButtonCandidate2"));
-        ModList_ScrollRect.SetActive(false);
+        GameObject.Destroy(modList_GameObject.transform.Find("Viewport/Content/ButtonCandidate2").gameObject);
     }
 }
