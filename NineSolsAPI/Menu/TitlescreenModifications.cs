@@ -140,6 +140,7 @@ internal class TitleScreenModList
     private static GameObject ModList_ScrollRect = null!;
     private static GameObject buttonClone = null!;
 
+    private static string modList_GameObject_Label_Text_String = "Mod List";
     private static string URLConfirm_String = "Open the download page of {0}?\n({1})";
     private static string NotSynced_ConfirmString = "This save's mods are not synced with your mods. Load anyway?\n({0} missing)\n({1} different version)\n({2} new)";
     
