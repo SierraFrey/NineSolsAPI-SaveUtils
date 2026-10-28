@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BepInEx;
 using JetBrains.Annotations;
 
@@ -77,15 +78,15 @@ public static class SaveUtils
 
         Log.Debug("Inserting flags...");
 
-
-
-        foreach (var data in modDict.Keys)
+        for (int i = modDict.Count - 1; i >= 0; i--)
         {
-            if (!allCustomFlags.ContainsKey(data))
+            var guid = modDict.ElementAt(i).Key;
+            if (!allCustomFlags.ContainsKey(guid))
             {
-                modDict.Remove(data);
+                modDict.Remove(guid);
+                continue;
             }
-            foreach (var flag in allCustomFlags[data].Values)
+            foreach (var flag in allCustomFlags[guid].Values)
             {
                 SaveManager.Instance.allFlags.FlagDict.Add(flag.FinalSaveID, flag);
                 SaveManager.Instance.allFlags.Flags.Add(flag);
