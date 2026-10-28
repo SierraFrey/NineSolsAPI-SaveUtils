@@ -16,7 +16,10 @@ public static class SaveUtils
     {
         {NineSolsAPICore.PluginGUID, new ModData(Instance)}
     };
-    internal static Dictionary<string, Dictionary<string, GameFlagBase>> allCustomFlags = new();
+    internal static Dictionary<string, Dictionary<string, GameFlagBase>> allCustomFlags = new()
+    {
+        {NineSolsAPICore.PluginGUID, new Dictionary<string, GameFlagBase>()}
+    };
 
     private static bool active = false;
 
@@ -51,6 +54,10 @@ public static class SaveUtils
     
     public static void SetURL(BaseUnityPlugin owner, string url)
     {
+        if (active)
+        {
+            return;
+        }
         string GUID = owner.Info.Metadata.GUID;
         if (!modDict.ContainsKey(GUID))
         {
@@ -69,19 +76,23 @@ public static class SaveUtils
 
         Log.Debug("Inserting flags...");
 
-        foreach (var flagdict in allCustomFlags.Values)
-        {
-            foreach (var flag in flagdict.Values)
-            {
-                SaveManager.Instance.allFlags.FlagDict.Add(flag.FinalSaveID, flag);
-                SaveManager.Instance.allFlags.Flags.Add(flag);
-            }
-        }
-        
         int count = 0;
         foreach (var meta in modDict.Values)
         {
             count += meta.flagCount;
+        }
+
+        foreach (var data in modDict.Keys)
+        {
+            if (!allCustomFlags.ContainsKey(data))
+            {
+                modDict.Remove(data);
+            }
+            foreach (var flag in allCustomFlags[data].Values)
+            {
+                SaveManager.Instance.allFlags.FlagDict.Add(flag.FinalSaveID, flag);
+                SaveManager.Instance.allFlags.Flags.Add(flag);
+            }
         }
         
         active = true;
@@ -104,6 +115,7 @@ public static class SaveUtils
             return allCustomFlags[GUID][flag.FinalSaveID];
         }
 
+        
         if (active)
         {
             Log.Error("New flags must be created before a save is loaded/created.");
