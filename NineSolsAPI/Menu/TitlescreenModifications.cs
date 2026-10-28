@@ -180,17 +180,20 @@ internal class TitleScreenModList
             {
                 ModData data = slotModDict.ElementAt(j).Value;
 
+                // Add mod list element
                 GameObject newButton = ObjectUtils.InstantiateAutoReference(buttonClone, buttonClone.transform.parent, false);
                 modButtons[i].Add(data.guid, newButton);
                 newButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, (-50 * j));
                 var newButtonText = newButton.transform.GetChild(0).GetComponent<Text>();
                 newButtonText.text = $"{data.name} - {data.version}";
 
+                // Check for missing mod(s)
                 if (!modDict.ContainsKey(data.guid))
                 {
                     newButtonText.color = new Color(1f, 0f, 0f);
                     desyncTracker[(int)Desyncs.Missing][i]++;
                 }
+                // Check for different version mod(s)
                 else if (modDict[data.guid].version != data.version)
                 {
                     newButtonText.color = new Color(1f, 0.5f, 0f);
@@ -204,10 +207,10 @@ internal class TitleScreenModList
                     Application.OpenURL(data.url)));
                 }
             }
-
+            // Check for new mod(s)
             foreach (ModData data in modDict.Values)
             {
-                if (slotModDict != null && !slotModDict.ContainsKey(data.guid))
+                if (slotModDict != null && !slotModDict.ContainsKey(data.guid) && data.flagCount > 0)
                 {
                     desyncTracker[(int)Desyncs.New][i]++;
                 }
