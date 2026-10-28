@@ -56,6 +56,7 @@ public static class SaveUtils
     {
         if (active)
         {
+            Log.Error("SetURL must be called before a save is loaded/created.");
             return;
         }
         string GUID = owner.Info.Metadata.GUID;
@@ -76,11 +77,7 @@ public static class SaveUtils
 
         Log.Debug("Inserting flags...");
 
-        int count = 0;
-        foreach (var meta in modDict.Values)
-        {
-            count += meta.flagCount;
-        }
+
 
         foreach (var data in modDict.Keys)
         {
@@ -94,7 +91,13 @@ public static class SaveUtils
                 SaveManager.Instance.allFlags.Flags.Add(flag);
             }
         }
-        
+
+        int count = 0;
+        foreach (var meta in modDict.Values)
+        {
+            count += meta.flagCount;
+        }
+
         active = true;
         Log.Debug(count + " Inserted to flag dictionary.");
     }
