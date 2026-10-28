@@ -187,13 +187,13 @@ internal class TitleScreenModList
                 var newButtonText = newButton.transform.GetChild(0).GetComponent<Text>();
                 newButtonText.text = $"{data.name} - {data.version}";
 
-                // Check for missing mod(s)
+                // Check if mod is missing
                 if (!modDict.ContainsKey(data.guid))
                 {
                     newButtonText.color = new Color(1f, 0f, 0f);
                     desyncTracker[(int)Desyncs.Missing][i]++;
                 }
-                // Check for different version mod(s)
+                // Check if mod is different version
                 else if (modDict[data.guid].version != data.version)
                 {
                     newButtonText.color = new Color(1f, 0.5f, 0f);
